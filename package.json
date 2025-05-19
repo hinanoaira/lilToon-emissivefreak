@@ -1,9 +1,9 @@
 {
   "name": "jp.hinasense.liltoon.freak",
-  "displayName": "lilToon with Emissive Freak",
-  "version": "1.0.0",
+  "displayName": "lilToon EmissiveFreak",
+  "version": "1.0.1",
   "unity": "2022.3",
-  "description": "Emissive Freak additionally implemented lilToon.",
+  "description": "Adds EmissiveFreak support to lilToon for advanced emissive effects.",
   "author": {
     "name": "HinanoAira",
     "email": "aira@hinasense.jp",

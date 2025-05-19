@@ -48,6 +48,7 @@ namespace lilToon
 
         private static bool isShowCustomProperties;
         private const string shaderName = "lilToonFreak";
+        public static new lilToonFreakEditorSetting edSet { get { return lilToonFreakEditorSetting.instance; } }
 
         protected override void LoadCustomProperties(MaterialProperty[] props, Material material)
         {
@@ -101,6 +102,25 @@ namespace lilToon
             _EmissiveFreak2HueShift = FindProperty("_EmissiveFreak2HueShift", props);
         }
 
+        private static void ToggleGUI(MaterialEditor materialEditor, MaterialProperty property, string label = "")
+        {
+            EditorGUI.showMixedValue = property.hasMixedValue;
+            using (var ccs = new EditorGUI.ChangeCheckScope())
+            {
+                if (string.IsNullOrEmpty(label))
+                {
+                    label = property.displayName;
+                }
+                var exampleValue = EditorGUILayout.ToggleLeft(label, property.floatValue == 1.0f) ? 1.0f : 0.0f;
+                if (ccs.changed)
+                {
+                    materialEditor.RegisterPropertyChangeUndo(property.name);
+                    property.floatValue = exampleValue;
+                }
+            }
+            EditorGUI.showMixedValue = false;
+        }
+
         protected override void DrawCustomProperties(Material material)
         {
             // GUIStyles Name   Description
@@ -115,7 +135,7 @@ namespace lilToon
             if (isShowCustomProperties)
             {
                 EditorGUILayout.BeginVertical(boxOuter);
-                m_MaterialEditor.ShaderProperty(_UseEmissionParallax, "Emission Parallax(Arktoon)");
+                ToggleGUI(m_MaterialEditor, _UseEmissionParallax, "Emission Parallax(Arktoon)");
                 var useEmissionPara = _UseEmissionParallax.floatValue;
                 if (useEmissionPara > 0)
                 {
@@ -148,13 +168,17 @@ namespace lilToon
                 m_MaterialEditor.TextureScaleOffsetProperty(_EmissiveFreak1DepthMask);
                 m_MaterialEditor.ShaderProperty(_EmissiveFreak1DepthMaskInvert, "Invert Depth Mask");
                 lilEditorGUI.DrawLine();
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1Breathing, "Breathing");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1BreathingMix, "Breathing Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkOut, "Blink Out");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkOutMix, "Blink Out Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkIn, "Blink In");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkInMix, "Blink In Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak1HueShift, "Hue Shift");
+                edSet.isShowBreasing1st = lilEditorGUI.DrawSimpleFoldout("Breathing", edSet.isShowBreasing1st, false);
+                if (edSet.isShowBreasing1st)
+                {
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1Breathing, "Breathing");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1BreathingMix, "Breathing Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkOut, "Blink Out");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkOutMix, "Blink Out Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkIn, "Blink In");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1BlinkInMix, "Blink In Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak1HueShift, "Hue Shift");
+                }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndVertical();
 
@@ -173,13 +197,17 @@ namespace lilToon
                 m_MaterialEditor.TextureScaleOffsetProperty(_EmissiveFreak2DepthMask);
                 m_MaterialEditor.ShaderProperty(_EmissiveFreak2DepthMaskInvert, "Invert Depth Mask");
                 lilEditorGUI.DrawLine();
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2Breathing, "Breathing");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2BreathingMix, "Breathing Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkOut, "Blink Out");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkOutMix, "Blink Out Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkIn, "Blink In");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkInMix, "Blink In Mix");
-                m_MaterialEditor.ShaderProperty(_EmissiveFreak2HueShift, "Hue Shift");
+                edSet.isShowBreasing2nd = lilEditorGUI.DrawSimpleFoldout("Breathing", edSet.isShowBreasing2nd, false);
+                if (edSet.isShowBreasing2nd)
+                {
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2Breathing, "Breathing");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2BreathingMix, "Breathing Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkOut, "Blink Out");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkOutMix, "Blink Out Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkIn, "Blink In");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2BlinkInMix, "Blink In Mix");
+                    m_MaterialEditor.ShaderProperty(_EmissiveFreak2HueShift, "Hue Shift");
+                }
                 EditorGUILayout.EndVertical();
                 EditorGUILayout.EndVertical();
             }
@@ -266,6 +294,12 @@ namespace lilToon
             }
         }
         */
+
+        public class lilToonFreakEditorSetting : ScriptableSingleton<lilToonFreakEditorSetting>
+        {
+            public bool isShowBreasing1st = false;
+            public bool isShowBreasing2nd = false;
+        }
     }
 }
 #endif

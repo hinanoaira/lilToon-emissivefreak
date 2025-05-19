@@ -24,6 +24,25 @@
           },
           "zipSHA256": "8e31cbc355cf1cb2ddeeca12740e00c16841095e92e45809887ea4b0dba14ffe",
           "url": "https://github.com/hinanoaira/lilToon-emissivefreak/releases/download/v1.0.0/jp.hinasense.liltoon.freak-1.0.0.zip"
+        },
+        "1.0.0-pre.1": {
+          "name": "jp.hinasense.liltoon.freak",
+          "displayName": "lilToon with Emissive Freak",
+          "version": "1.0.0-pre.1",
+          "unity": "2022.3",
+          "description": "Emissive Freak additionally implemented lilToon.",
+          "author": {
+            "name": "HinanoAira",
+            "email": "aira@hinasense.jp",
+            "url": "https://hinasense.jp"
+          },
+          "repo": "https://vpm.hinasense.jp/vpm.json",
+          "license": "MIT",
+          "vpmDependencies": {
+            "jp.lilxyzw.liltoon": ">=1.9.0"
+          },
+          "zipSHA256": "322aeb04874e1608b56a7a4d49715c06b13dbf3f378435c901083553a2483acc",
+          "url": "https://github.com/hinanoaira/lilToon-emissivefreak/releases/download/v1.0.0-pre.1/jp.hinasense.liltoon.freak-1.0.0-pre.1.zip"
         }
       }
     }

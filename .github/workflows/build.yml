@@ -83,7 +83,7 @@ jobs:
 
       - name: Clean gh-pages branch
         run: |
-          git rm -rf . || true
+          git rm -rf . --ignore-unmatch --exclude=vpm.json || true
           git clean -fdx || true
 
       - name: Fetch package.json from source branch
@@ -119,10 +119,9 @@ jobs:
 
           SHA256=$(sha256sum "$ZIPNAME" | awk '{print $1}')
 
-          if [ -f vpm.json ]; then
-            cp vpm.json vpm.json.bak
-          else
-            echo '{"name":"'$REPO_NAME'","id":"'$VPM_ID'","url":"'$REPOURL'","author":"'$AUTHOR_NAME'","packages":{}}' > vpm.json.bak
+          # vpm.jsonがなければ初期化
+          if [ ! -f vpm.json ]; then
+            echo '{"name":"'$REPO_NAME'","id":"'$VPM_ID'","url":"'$REPOURL'","author":"'$AUTHOR_NAME'","packages":{}}' > vpm.json
           fi
 
           jq \
@@ -130,15 +129,20 @@ jobs:
             --arg url "$ZIPURL" \
             '. + {zipSHA256: $zipSHA256, url: $url}' package.json > package.vpm.json
 
-          jq --arg name "$NAME" \
-             --arg version "$VERSION" \
-             --slurpfile ver package.vpm.json \
-             '.packages[$name].versions[$version] = $ver[0]' vpm.json.bak > vpm.json
+          jq --slurpfile new package.vpm.json '
+            .packages[$new[0].name].versions |= (
+              {
+                ($new[0].version): $new[0]
+              } + .
+            )
+          ' vpm.json > vpm.json.tmp
+
+          mv vpm.json.tmp vpm.json
 
       - name: Commit and push vpm.json
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add vpm.json
-          git commit -m "Update vpm.json for $NAME $VERSION" || echo "No changes to commit"
+          git commit -m "Update vpm.json" || echo "No changes to commit"
           git push origin gh-pages

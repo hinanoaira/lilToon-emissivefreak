@@ -5,56 +5,47 @@
 //#define LIL_CUSTOM_PROPERTIES \
 //    float _CustomVariable;
 #define LIL_CUSTOM_PROPERTIES \
-uniform float _UseEmissionParallax; \
-uniform float4 _EmissionAParallaxTex_ST; \
-uniform float4 _EmissionAParallaxColor; \
-uniform float4 _EmissionAParallaxMask_ST; \
-uniform float _EmissionAParallaxDepth; \
-uniform float4 _EmissionAParallaxDepthMask_ST; \
-uniform float _EmissionAParallaxDepthMaskInvert; \
-uniform float4 _EmissiveFreak1Tex_ST; \
-uniform float4 _EmissiveFreak1Color; \
-uniform float4 _EmissiveFreak1Mask_ST; \
-uniform float _EmissiveFreak1U; \
-uniform float _EmissiveFreak1V; \
-uniform float _EmissiveFreak1Depth; \
-uniform float4 _EmissiveFreak1DepthMask_ST; \
-uniform float _EmissiveFreak1DepthMaskInvert; \
-uniform float _EmissiveFreak1Breathing; \
-uniform float _EmissiveFreak1BreathingMix; \
-uniform float _EmissiveFreak1BlinkOut; \
-uniform float _EmissiveFreak1BlinkOutMix; \
-uniform float _EmissiveFreak1BlinkIn; \
-uniform float _EmissiveFreak1BlinkInMix; \
-uniform float _EmissiveFreak1HueShift; \
+float _UseEmissionParallax; \
+float4 _EmissionAParallaxColor; \
+float _EmissionAParallaxDepth; \
+float _EmissionAParallaxDepthMaskInvert; \
+float4 _EmissiveFreak1Color; \
+float _EmissiveFreak1U; \
+float _EmissiveFreak1V; \
+float _EmissiveFreak1Depth; \
+float _EmissiveFreak1DepthMaskInvert; \
+float _EmissiveFreak1Breathing; \
+float _EmissiveFreak1BreathingMix; \
+float _EmissiveFreak1BlinkOut; \
+float _EmissiveFreak1BlinkOutMix; \
+float _EmissiveFreak1BlinkIn; \
+float _EmissiveFreak1BlinkInMix; \
+float _EmissiveFreak1HueShift; \
  \
-uniform float4 _EmissiveFreak2Tex_ST; \
-uniform float4 _EmissiveFreak2Color; \
-uniform float4 _EmissiveFreak2Mask_ST; \
-uniform float _EmissiveFreak2U; \
-uniform float _EmissiveFreak2V; \
-uniform float _EmissiveFreak2Depth; \
-uniform float4 _EmissiveFreak2DepthMask_ST; \
-uniform float _EmissiveFreak2DepthMaskInvert; \
-uniform float _EmissiveFreak2Breathing; \
-uniform float _EmissiveFreak2BreathingMix; \
-uniform float _EmissiveFreak2BlinkOut; \
-uniform float _EmissiveFreak2BlinkOutMix; \
-uniform float _EmissiveFreak2BlinkIn; \
-uniform float _EmissiveFreak2BlinkInMix; \
-uniform float _EmissiveFreak2HueShift;
+float4 _EmissiveFreak2Color; \
+float _EmissiveFreak2U; \
+float _EmissiveFreak2V; \
+float _EmissiveFreak2Depth; \
+float _EmissiveFreak2DepthMaskInvert; \
+float _EmissiveFreak2Breathing; \
+float _EmissiveFreak2BreathingMix; \
+float _EmissiveFreak2BlinkOut; \
+float _EmissiveFreak2BlinkOutMix; \
+float _EmissiveFreak2BlinkIn; \
+float _EmissiveFreak2BlinkInMix; \
+float _EmissiveFreak2HueShift;
 
 // Custom textures
 #define LIL_CUSTOM_TEXTURES \
-TEXTURE2D(_EmissionAParallaxTex); \
-TEXTURE2D(_EmissionAParallaxMask); \
-TEXTURE2D(_EmissionAParallaxDepthMask); \
-TEXTURE2D(_EmissiveFreak1Tex); \
-TEXTURE2D(_EmissiveFreak1Mask); \
-TEXTURE2D(_EmissiveFreak1DepthMask); \
-TEXTURE2D(_EmissiveFreak2Tex); \
-TEXTURE2D(_EmissiveFreak2Mask); \
-TEXTURE2D(_EmissiveFreak2DepthMask);
+TEXTURE2D(_EmissionAParallaxTex); float4 _EmissionAParallaxTex_ST; \
+TEXTURE2D(_EmissionAParallaxMask); float4 _EmissionAParallaxMask_ST; \
+TEXTURE2D(_EmissionAParallaxDepthMask); float4 _EmissionAParallaxDepthMask_ST; \
+TEXTURE2D(_EmissiveFreak1Tex); float4 _EmissiveFreak1Tex_ST; \
+TEXTURE2D(_EmissiveFreak1Mask); float4 _EmissiveFreak1Mask_ST; \
+TEXTURE2D(_EmissiveFreak1DepthMask); float4 _EmissiveFreak1DepthMask_ST; \
+TEXTURE2D(_EmissiveFreak2Tex); float4 _EmissiveFreak2Tex_ST; \
+TEXTURE2D(_EmissiveFreak2Mask); float4 _EmissiveFreak2Mask_ST; \
+TEXTURE2D(_EmissiveFreak2DepthMask); float4 _EmissiveFreak2DepthMask_ST;
 
 // Add vertex shader input
 //#define LIL_REQUIRE_APP_POSITION
@@ -212,42 +203,47 @@ TEXTURE2D(_EmissiveFreak2DepthMask);
     \
     float3 emissionParallax = float3(0,0,0); \
     if(_UseEmissionParallax) { \
-        float _EmissionAParallaxDepthMask_var = LIL_SAMPLE_2D(_EmissionAParallaxDepthMask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissionAParallaxDepthMask)).r; \
-        float2 emissionParallaxTransform = _EmissionAParallaxDepth * (_EmissionAParallaxDepthMask_var - _EmissionAParallaxDepthMaskInvert) * mul(tangentTransform, viewDirection).xy + fd.uv0; \
-        float _EmissionMask_var =  LIL_SAMPLE_2D(_EmissionAParallaxMask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissionAParallaxMask)).r; \
-        float3 _EmissionAParallaxTex_var = LIL_SAMPLE_2D(_EmissionAParallaxTex, sampler_linear_repeat, TRANSFORM_TEX(emissionParallaxTransform, _EmissionAParallaxTex)).rgb * _EmissionAParallaxColor.rgb; \
-        emissionParallax = _EmissionAParallaxTex_var * _EmissionMask_var; \
+        emissionParallax = CalculateEmissionParallax( \
+            fd.uv0, \
+            tangentTransform, \
+            viewDirection, \
+            _EmissionAParallaxDepthMask, _EmissionAParallaxDepthMask_ST, \
+            _EmissionAParallaxMask, _EmissionAParallaxMask_ST, \
+            _EmissionAParallaxTex, _EmissionAParallaxTex_ST, \
+            _EmissionAParallaxDepth, _EmissionAParallaxDepthMaskInvert, \
+            _EmissionAParallaxColor.rgb \
+        ); \
     } \
-    float time = _Time.r; \
     \
-    float2 emissiveFreak1uv = fd.uv0 + float2(fmod(_EmissiveFreak1U * time, 1.0 / _EmissiveFreak1Tex_ST.x), fmod(time * _EmissiveFreak1V, 1.0 / _EmissiveFreak1Tex_ST.y)); \
-    float _EmissiveFreak1DepthMask_var = LIL_SAMPLE_2D(_EmissiveFreak1DepthMask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissiveFreak1DepthMask)).r; \
-    float2 emissiveFreak1Transform = _EmissiveFreak1Depth * (_EmissiveFreak1DepthMask_var - _EmissiveFreak1DepthMaskInvert) * mul(tangentTransform, viewDirection).xy + emissiveFreak1uv; \
-    float _EmissiveFreak1Mask_var =  LIL_SAMPLE_2D(_EmissiveFreak1Mask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissiveFreak1Mask)).r; \
-    float3 _EmissiveFreak1Tex_var = LIL_SAMPLE_2D(_EmissiveFreak1Tex, sampler_linear_repeat, TRANSFORM_TEX(emissiveFreak1Transform, _EmissiveFreak1Tex)).rgb * _EmissiveFreak1Color.rgb; \
-    float emissiveFreak1Breathing = cos(_EmissiveFreak1Breathing*time) * 0.5 + 0.5; \
-    float emissiveFreak1BlinkOut = 1 - ((_EmissiveFreak1BlinkOut*time) % 1.0); \
-    float emissiveFreak1BlinkIn = (_EmissiveFreak1BlinkIn*time) % 1.0; \
-    float emissiveFreak1Hue = (_EmissiveFreak1HueShift*time) % 1.0; \
-    _EmissiveFreak1Tex_var = CalculateHSV(_EmissiveFreak1Tex_var, emissiveFreak1Hue, 1.0, 1.0); \
-    float3 emissiveFreak1 = _EmissiveFreak1Tex_var * _EmissiveFreak1Mask_var; \
-    emissiveFreak1 = lerp(emissiveFreak1, emissiveFreak1 * emissiveFreak1Breathing, _EmissiveFreak1BreathingMix); \
-    emissiveFreak1 = lerp(emissiveFreak1, emissiveFreak1 * emissiveFreak1BlinkOut, _EmissiveFreak1BlinkOutMix); \
-    emissiveFreak1 = lerp(emissiveFreak1, emissiveFreak1 * emissiveFreak1BlinkIn, _EmissiveFreak1BlinkInMix); \
-    \
-    float2 emissiveFreak2uv = fd.uv0 + float2(fmod(_EmissiveFreak2U * time, 1.0 / _EmissiveFreak2Tex_ST.x), fmod(time * _EmissiveFreak2V, 1.0 / _EmissiveFreak2Tex_ST.y)); \
-    float _EmissiveFreak2DepthMask_var = LIL_SAMPLE_2D(_EmissiveFreak2DepthMask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissiveFreak2DepthMask)).r; \
-    float2 emissiveFreak2Transform = _EmissiveFreak2Depth * (_EmissiveFreak2DepthMask_var - _EmissiveFreak2DepthMaskInvert) * mul(tangentTransform, viewDirection).xy + emissiveFreak2uv; \
-    float _EmissiveFreak2Mask_var =  LIL_SAMPLE_2D(_EmissiveFreak2Mask, sampler_linear_repeat, TRANSFORM_TEX(fd.uv0, _EmissiveFreak2Mask)).r; \
-    float3 _EmissiveFreak2Tex_var = LIL_SAMPLE_2D(_EmissiveFreak2Tex, sampler_linear_repeat, TRANSFORM_TEX(emissiveFreak2Transform, _EmissiveFreak2Tex)).rgb * _EmissiveFreak2Color.rgb; \
-    float emissiveFreak2Breathing = cos(_EmissiveFreak2Breathing*time) * 0.5 + 0.5; \
-    float emissiveFreak2BlinkOut = 1 - ((_EmissiveFreak2BlinkOut*time) % 1.0); \
-    float emissiveFreak2BlinkIn = (_EmissiveFreak2BlinkIn*time) % 1.0; \
-    float emissiveFreak2Hue = (_EmissiveFreak2HueShift*time) % 1.0; \
-    _EmissiveFreak2Tex_var = CalculateHSV(_EmissiveFreak2Tex_var, emissiveFreak2Hue, 1.0, 1.0); \
-    float3 emissiveFreak2 = _EmissiveFreak2Tex_var * _EmissiveFreak2Mask_var; \
-    emissiveFreak2 = lerp(emissiveFreak2, emissiveFreak2 * emissiveFreak2Breathing, _EmissiveFreak2BreathingMix); \
-    emissiveFreak2 = lerp(emissiveFreak2, emissiveFreak2 * emissiveFreak2BlinkOut, _EmissiveFreak2BlinkOutMix); \
-    emissiveFreak2 = lerp(emissiveFreak2, emissiveFreak2 * emissiveFreak2BlinkIn, _EmissiveFreak2BlinkInMix); \
-    \
+    float3 emissiveFreak1 = CalculateEmissiveFreak( \
+        fd.uv0, \
+        tangentTransform, \
+        viewDirection, \
+        _EmissiveFreak1Tex, _EmissiveFreak1Tex_ST, \
+        _EmissiveFreak1Mask, _EmissiveFreak1Mask_ST, \
+        _EmissiveFreak1DepthMask, _EmissiveFreak1DepthMask_ST, \
+        _EmissiveFreak1U, _EmissiveFreak1V, \
+        _EmissiveFreak1Depth, _EmissiveFreak1DepthMaskInvert, \
+        _EmissiveFreak1Breathing, _EmissiveFreak1BreathingMix, \
+        _EmissiveFreak1BlinkOut, _EmissiveFreak1BlinkOutMix, \
+        _EmissiveFreak1BlinkIn, _EmissiveFreak1BlinkInMix, \
+        _EmissiveFreak1HueShift, \
+        _EmissiveFreak1Color.rgb \
+    ); \
+    float3 emissiveFreak2 = CalculateEmissiveFreak( \
+        fd.uv0, \
+        tangentTransform, \
+        viewDirection, \
+        _EmissiveFreak2Tex, _EmissiveFreak2Tex_ST, \
+        _EmissiveFreak2Mask, _EmissiveFreak2Mask_ST, \
+        _EmissiveFreak2DepthMask, _EmissiveFreak2DepthMask_ST, \
+        _EmissiveFreak2U, _EmissiveFreak2V, \
+        _EmissiveFreak2Depth, _EmissiveFreak2DepthMaskInvert, \
+        _EmissiveFreak2Breathing, _EmissiveFreak2BreathingMix, \
+        _EmissiveFreak2BlinkOut, _EmissiveFreak2BlinkOutMix, \
+        _EmissiveFreak2BlinkIn, _EmissiveFreak2BlinkInMix, \
+        _EmissiveFreak2HueShift, \
+        _EmissiveFreak2Color.rgb \
+    ); \
+     \
     fd.emissionColor = fd.emissionColor + emissionParallax + emissiveFreak1 + emissiveFreak2;

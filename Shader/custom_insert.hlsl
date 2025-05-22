@@ -1,9 +1,11 @@
 float3 CalculateHSV(float3 baseTexture, float hueShift, float saturation, float value ){
-    float4 node_5443_k = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
-    float4 node_5443_p = lerp(float4(float4(baseTexture,0.0).zy, node_5443_k.wz), float4(float4(baseTexture,0.0).yz, node_5443_k.xy), step(float4(baseTexture,0.0).z, float4(baseTexture,0.0).y));
-    float4 node_5443_q = lerp(float4(node_5443_p.xyw, float4(baseTexture,0.0).x), float4(float4(baseTexture,0.0).x, node_5443_p.yzx), step(node_5443_p.x, float4(baseTexture,0.0).x));
-    float node_5443_d = node_5443_q.x - min(node_5443_q.w, node_5443_q.y);
-    float node_5443_e = 1.0e-10;
-    float3 node_5443 = float3(abs(node_5443_q.z + (node_5443_q.w - node_5443_q.y) / (6.0 * node_5443_d + node_5443_e)), node_5443_d / (node_5443_q.x + node_5443_e), node_5443_q.x);;
-    return (lerp(float3(1,1,1),saturate(3.0*abs(1.0-2.0*frac((hueShift+node_5443.r)+float3(0.0,-1.0/3.0,1.0/3.0)))-1),(node_5443.g*saturation))*(value*node_5443.b));
+    float4 baseTex4 = float4(baseTexture, 0.0);
+    float4 hsv_k = float4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
+    float4 hsv_p = lerp(float4(baseTex4.zy, hsv_k.wz), float4(baseTex4.yz, hsv_k.xy), step(baseTex4.z, baseTex4.y));
+    float4 hsv_q = lerp(float4(hsv_p.xyw, baseTex4.x), float4(baseTex4.x, hsv_p.yzx), step(hsv_p.x, baseTex4.x));
+
+    float chroma = hsv_q.x - min(hsv_q.w, hsv_q.y);
+    float3 hsv = float3(abs(hsv_q.z + (hsv_q.w - hsv_q.y) / (6.0 * chroma + 1.0e-10)), chroma / (hsv_q.x + 1.0e-10), hsv_q.x);
+    
+    return (lerp(float3(1,1,1), saturate(3.0*abs(1.0-2.0*frac((hueShift+hsv.r)+float3(0.0,-1.0/3.0,1.0/3.0)))-1), (hsv.g*saturation))*(value*hsv.b));
 }

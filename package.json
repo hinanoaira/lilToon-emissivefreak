@@ -11,8 +11,13 @@
   },
   "repo": "https://vpm.hinasense.jp/vpm.json",
   "license": "MIT",
-  "licenseUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/LICENSE",
+  "licensesUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/LICENSE",
   "changelogUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/CHANGELOG.md",
+  "keywords": [
+    "Toon",
+    "Shader",
+    "Material"
+  ],
   "vpmDependencies": {
     "jp.lilxyzw.liltoon": ">=1.9.0"
   }

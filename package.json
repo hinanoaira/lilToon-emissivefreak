@@ -12,6 +12,7 @@
   "repo": "https://vpm.hinasense.jp/vpm.json",
   "license": "MIT",
   "licenseUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/develop/LICENSE",
+  "changelogUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/CHANGELOG.md",
   "vpmDependencies": {
     "jp.lilxyzw.liltoon": ">=1.9.0"
   }

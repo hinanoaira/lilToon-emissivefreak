@@ -24,7 +24,7 @@
           "vpmDependencies": {
             "jp.lilxyzw.liltoon": ">=1.9.0"
           },
-          "zipSHA256": "796215b9e06503dd2a932b7972d1f29776cef6d76be87e15c57792985a13deb2",
+          "zipSHA256": "7a40e48a271e294004fac865da248694071864f5c52272b521ae1c2fe6e92416",
           "url": "https://github.com/hinanoaira/lilToon-emissivefreak/releases/download/v1.0.3/jp.hinasense.liltoon.freak-1.0.3.zip"
         },
         "1.0.3-pre.1": {

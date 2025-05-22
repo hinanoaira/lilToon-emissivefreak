@@ -23,7 +23,7 @@ jobs:
           VERSION=$(jq -r .version package.json)
           ZIPNAME="${NAME}-${VERSION}.zip"
           UNITYPACKAGE_NAME="${NAME}-${VERSION}-installer.unitypackage"
-          REPO=$(jq -r .url package.json)
+          REPO=$(jq -r .repo package.json)
           echo "zipname=$ZIPNAME" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "name=$NAME" >> $GITHUB_OUTPUT

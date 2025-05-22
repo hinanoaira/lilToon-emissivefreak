@@ -205,11 +205,12 @@ TEXTURE2D(_EmissiveFreak2DepthMask); float4 _EmissiveFreak2DepthMask_ST;
     if(_UseEmissionParallax) { \
         emissionParallax = CalculateEmissionParallax( \
             fd.uv0, \
+            fd.uv0, \
             tangentTransform, \
             viewDirection, \
-            _EmissionAParallaxDepthMask, _EmissionAParallaxDepthMask_ST, \
-            _EmissionAParallaxMask, _EmissionAParallaxMask_ST, \
             _EmissionAParallaxTex, _EmissionAParallaxTex_ST, \
+            _EmissionAParallaxMask, _EmissionAParallaxMask_ST, \
+            _EmissionAParallaxDepthMask, _EmissionAParallaxDepthMask_ST, \
             _EmissionAParallaxDepth, _EmissionAParallaxDepthMaskInvert, \
             _EmissionAParallaxColor.rgb \
         ); \

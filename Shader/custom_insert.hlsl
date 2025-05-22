@@ -11,19 +11,19 @@ float3 CalculateHSV(float3 baseTexture, float hueShift, float saturation, float 
 }
 
 float3 CalculateEmissionParallax(
-    float2 uv0,
+    float2 mainUV,
+    float2 maskUV,
     float3x3 tangentTransform,
     float3 viewDirection,
-    Texture2D depthMask, float4 depthMask_ST,
-    Texture2D mask, float4 mask_ST,
     Texture2D tex, float4 tex_ST,
-    float Depth,
-    float DepthMaskInvert,
+    Texture2D mask, float4 mask_ST,
+    Texture2D depthMask, float4 depthMask_ST,
+    float Depth, float DepthMaskInvert,
     float3 Color
 ) {
-    float depthMaskVal = LIL_SAMPLE_2D(depthMask, sampler_linear_repeat, TRANSFORM_TEX(uv0, depthMask)).r;
-    float2 transformedUV = Depth * (depthMaskVal - DepthMaskInvert) * mul(tangentTransform, viewDirection).xy + uv0;
-    float maskVal = LIL_SAMPLE_2D(mask, sampler_linear_repeat, TRANSFORM_TEX(uv0, mask)).r;
+    float depthMaskVal = LIL_SAMPLE_2D(depthMask, sampler_linear_repeat, TRANSFORM_TEX(maskUV, depthMask)).r;
+    float2 transformedUV = Depth * (depthMaskVal - DepthMaskInvert) * mul(tangentTransform, viewDirection).xy + mainUV;
+    float maskVal = LIL_SAMPLE_2D(mask, sampler_linear_repeat, TRANSFORM_TEX(maskUV, mask)).r;
     float3 texVal = LIL_SAMPLE_2D(tex, sampler_linear_repeat, TRANSFORM_TEX(transformedUV, tex)).rgb * Color;
     return texVal * maskVal;
 }
@@ -35,7 +35,8 @@ float3 CalculateEmissiveFreak(
     Texture2D tex, float4 tex_ST,
     Texture2D mask, float4 mask_ST,
     Texture2D depthMask, float4 depthMask_ST,
-    float U, float V, float Depth, float DepthMaskInvert,
+    float U, float V,
+    float Depth, float DepthMaskInvert,
     float Breathing, float BreathingMix,
     float BlinkOut, float BlinkOutMix,
     float BlinkIn, float BlinkInMix,
@@ -45,14 +46,15 @@ float3 CalculateEmissiveFreak(
     float time = _Time.r;
     float invTexX = 1.0 / tex_ST.x;
     float invTexY = 1.0 / tex_ST.y;
-    float2 uv = uv0 + float2(frac(U * time * invTexX), frac(time * V * invTexY));
+    float2 mainUV = uv0 + float2(frac(U * time * invTexX), frac(time * V * invTexY));
     float3 texVal = CalculateEmissionParallax(
-        uv,
+        mainUV,
+        uv0,
         tangentTransform,
         viewDirection,
-        depthMask, depthMask_ST,
-        mask, mask_ST,
         tex, tex_ST,
+        mask, mask_ST,
+        depthMask, depthMask_ST,
         Depth, DepthMaskInvert,
         Color
     );

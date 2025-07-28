@@ -6,6 +6,33 @@
   "packages": {
     "jp.hinasense.liltoon.freak": {
       "versions": {
+        "1.0.5": {
+          "name": "jp.hinasense.liltoon.freak",
+          "displayName": "lilToon EmissiveFreak",
+          "version": "1.0.5",
+          "unity": "2018.3",
+          "description": "Adds EmissiveFreak support to lilToon for advanced emissive effects.",
+          "author": {
+            "name": "HinanoAira",
+            "email": "aira@hinasense.jp",
+            "url": "https://hinasense.jp"
+          },
+          "repo": "https://vpm.hinasense.jp/vpm.json",
+          "license": "MIT",
+          "licensesUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/LICENSE",
+          "changelogUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/CHANGELOG.md",
+          "documentationUrl": "https://github.com/hinanoaira/lilToon-emissivefreak/blob/main/README.md",
+          "keywords": [
+            "Toon",
+            "Shader",
+            "Material"
+          ],
+          "vpmDependencies": {
+            "jp.lilxyzw.liltoon": ">=1.9.0"
+          },
+          "zipSHA256": "512a78b9a485513f95c8292d293a71fe899bc7cc2ba97eddc985d24f0e0fba9f",
+          "url": "https://github.com/hinanoaira/lilToon-emissivefreak/releases/download/v1.0.5/jp.hinasense.liltoon.freak-1.0.5.zip"
+        },
         "1.0.4": {
           "name": "jp.hinasense.liltoon.freak",
           "displayName": "lilToon EmissiveFreak",
